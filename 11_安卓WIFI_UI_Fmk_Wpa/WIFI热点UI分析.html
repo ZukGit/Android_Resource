@@ -1,0 +1,1781 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>WIFI热点UI分析</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+/* GitHub stylesheet for MarkdownPad (http://markdownpad.com) */
+/* Author: Nicolas Hery - http://nicolashery.com */
+/* Version: b13fe65ca28d2e568c6ed5d7f06581183df8f2ff */
+/* Source: https://github.com/nicolahery/markdownpad-github */
+
+/* RESET
+=============================================================================*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* BODY
+=============================================================================*/
+
+body {
+  font-family: Helvetica, arial, freesans, clean, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+  padding: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+body>*:first-child {
+  margin-top: 0 !important;
+}
+
+body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* BLOCKS
+=============================================================================*/
+
+p, blockquote, ul, ol, dl, table, pre {
+  margin: 15px 0;
+}
+
+/* HEADERS
+=============================================================================*/
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+  font-size: inherit;
+}
+
+h1 {
+  font-size: 28px;
+  color: #000;
+}
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #ccc;
+  color: #000;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+h4 {
+  font-size: 16px;
+}
+
+h5 {
+  font-size: 14px;
+}
+
+h6 {
+  color: #777;
+  font-size: 14px;
+}
+
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+  margin-top: 10px;
+}
+
+/* LINKS
+=============================================================================*/
+
+a {
+  color: #4183C4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* LISTS
+=============================================================================*/
+
+ul, ol {
+  padding-left: 30px;
+}
+
+ul li > :first-child, 
+ol li > :first-child, 
+ul li ul:first-of-type, 
+ol li ol:first-of-type, 
+ul li ol:first-of-type, 
+ol li ul:first-of-type {
+  margin-top: 0px;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+  margin-bottom: 0;
+}
+
+dl {
+  padding: 0;
+}
+
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+
+dl dt:first-child {
+  padding: 0;
+}
+
+dl dt>:first-child {
+  margin-top: 0px;
+}
+
+dl dt>:last-child {
+  margin-bottom: 0px;
+}
+
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+
+dl dd>:first-child {
+  margin-top: 0px;
+}
+
+dl dd>:last-child {
+  margin-bottom: 0px;
+}
+
+/* CODE
+=============================================================================*/
+
+pre, code, tt {
+  font-size: 12px;
+  font-family: Consolas, "Liberation Mono", Courier, monospace;
+}
+
+code, tt {
+  margin: 0 0px;
+  padding: 0px 0px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px;
+}
+
+pre>code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+pre code, pre tt {
+  background-color: transparent;
+  border: none;
+}
+
+kbd {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #DDDDDD;
+    background-image: linear-gradient(#F1F1F1, #DDDDDD);
+    background-repeat: repeat-x;
+    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+    border-image: none;
+    border-radius: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    line-height: 10px;
+    padding: 1px 4px;
+}
+
+/* QUOTES
+=============================================================================*/
+
+blockquote {
+  border-left: 4px solid #DDD;
+  padding: 0 15px;
+  color: #777;
+}
+
+blockquote>:first-child {
+  margin-top: 0px;
+}
+
+blockquote>:last-child {
+  margin-bottom: 0px;
+}
+
+/* HORIZONTAL RULES
+=============================================================================*/
+
+hr {
+  clear: both;
+  margin: 15px 0;
+  height: 0px;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  border-bottom: 4px solid #ddd;
+  padding: 0;
+}
+
+/* TABLES
+=============================================================================*/
+
+table th {
+  font-weight: bold;
+}
+
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 6px 13px;
+}
+
+table tr {
+  border-top: 1px solid #ccc;
+  background-color: #fff;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+/* IMAGES
+=============================================================================*/
+
+img {
+  max-width: 100%
+}
+</style>
+<style type="text/css">
+.highlight  { background: #ffffff; }
+.highlight .c { color: #999988; font-style: italic } /* Comment */
+.highlight .err { color: #a61717; background-color: #e3d2d2 } /* Error */
+.highlight .k { font-weight: bold } /* Keyword */
+.highlight .o { font-weight: bold } /* Operator */
+.highlight .cm { color: #999988; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #999999; font-weight: bold } /* Comment.Preproc */
+.highlight .c1 { color: #999988; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #999999; font-weight: bold; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #000000; background-color: #ffdddd } /* Generic.Deleted */
+.highlight .gd .x { color: #000000; background-color: #ffaaaa } /* Generic.Deleted.Specific */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .gr { color: #aa0000 } /* Generic.Error */
+.highlight .gh { color: #999999 } /* Generic.Heading */
+.highlight .gi { color: #000000; background-color: #ddffdd } /* Generic.Inserted */
+.highlight .gi .x { color: #000000; background-color: #aaffaa } /* Generic.Inserted.Specific */
+.highlight .go { color: #888888 } /* Generic.Output */
+.highlight .gp { color: #555555 } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #aaaaaa } /* Generic.Subheading */
+.highlight .gt { color: #aa0000 } /* Generic.Traceback */
+.highlight .kc { font-weight: bold } /* Keyword.Constant */
+.highlight .kd { font-weight: bold } /* Keyword.Declaration */
+.highlight .kp { font-weight: bold } /* Keyword.Pseudo */
+.highlight .kr { font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #445588; font-weight: bold } /* Keyword.Type */
+.highlight .m { color: #009999 } /* Literal.Number */
+.highlight .s { color: #d14 } /* Literal.String */
+.highlight .na { color: #008080 } /* Name.Attribute */
+.highlight .nb { color: #0086B3 } /* Name.Builtin */
+.highlight .nc { color: #445588; font-weight: bold } /* Name.Class */
+.highlight .no { color: #008080 } /* Name.Constant */
+.highlight .ni { color: #800080 } /* Name.Entity */
+.highlight .ne { color: #990000; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #990000; font-weight: bold } /* Name.Function */
+.highlight .nn { color: #555555 } /* Name.Namespace */
+.highlight .nt { color: #000080 } /* Name.Tag */
+.highlight .nv { color: #008080 } /* Name.Variable */
+.highlight .ow { font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mf { color: #009999 } /* Literal.Number.Float */
+.highlight .mh { color: #009999 } /* Literal.Number.Hex */
+.highlight .mi { color: #009999 } /* Literal.Number.Integer */
+.highlight .mo { color: #009999 } /* Literal.Number.Oct */
+.highlight .sb { color: #d14 } /* Literal.String.Backtick */
+.highlight .sc { color: #d14 } /* Literal.String.Char */
+.highlight .sd { color: #d14 } /* Literal.String.Doc */
+.highlight .s2 { color: #d14 } /* Literal.String.Double */
+.highlight .se { color: #d14 } /* Literal.String.Escape */
+.highlight .sh { color: #d14 } /* Literal.String.Heredoc */
+.highlight .si { color: #d14 } /* Literal.String.Interpol */
+.highlight .sx { color: #d14 } /* Literal.String.Other */
+.highlight .sr { color: #009926 } /* Literal.String.Regex */
+.highlight .s1 { color: #d14 } /* Literal.String.Single */
+.highlight .ss { color: #990073 } /* Literal.String.Symbol */
+.highlight .bp { color: #999999 } /* Name.Builtin.Pseudo */
+.highlight .vc { color: #008080 } /* Name.Variable.Class */
+.highlight .vg { color: #008080 } /* Name.Variable.Global */
+.highlight .vi { color: #008080 } /* Name.Variable.Instance */
+.highlight .il { color: #009999 } /* Literal.Number.Integer.Long */
+.pl-c {
+    color: #969896;
+}
+
+.pl-c1,.pl-mdh,.pl-mm,.pl-mp,.pl-mr,.pl-s1 .pl-v,.pl-s3,.pl-sc,.pl-sv {
+    color: #0086b3;
+}
+
+.pl-e,.pl-en {
+    color: #795da3;
+}
+
+.pl-s1 .pl-s2,.pl-smi,.pl-smp,.pl-stj,.pl-vo,.pl-vpf {
+    color: #333;
+}
+
+.pl-ent {
+    color: #63a35c;
+}
+
+.pl-k,.pl-s,.pl-st {
+    color: #a71d5d;
+}
+
+.pl-pds,.pl-s1,.pl-s1 .pl-pse .pl-s2,.pl-sr,.pl-sr .pl-cce,.pl-sr .pl-sra,.pl-sr .pl-sre,.pl-src,.pl-v {
+    color: #df5000;
+}
+
+.pl-id {
+    color: #b52a1d;
+}
+
+.pl-ii {
+    background-color: #b52a1d;
+    color: #f8f8f8;
+}
+
+.pl-sr .pl-cce {
+    color: #63a35c;
+    font-weight: bold;
+}
+
+.pl-ml {
+    color: #693a17;
+}
+
+.pl-mh,.pl-mh .pl-en,.pl-ms {
+    color: #1d3e81;
+    font-weight: bold;
+}
+
+.pl-mq {
+    color: #008080;
+}
+
+.pl-mi {
+    color: #333;
+    font-style: italic;
+}
+
+.pl-mb {
+    color: #333;
+    font-weight: bold;
+}
+
+.pl-md,.pl-mdhf {
+    background-color: #ffecec;
+    color: #bd2c00;
+}
+
+.pl-mdht,.pl-mi1 {
+    background-color: #eaffea;
+    color: #55a532;
+}
+
+.pl-mdr {
+    color: #795da3;
+    font-weight: bold;
+}
+
+.pl-mo {
+    color: #1d3e81;
+}
+.task-list {
+padding-left:10px;
+margin-bottom:0;
+}
+
+.task-list li {
+    margin-left: 20px;
+}
+
+.task-list-item {
+list-style-type:none;
+padding-left:10px;
+}
+
+.task-list-item label {
+font-weight:400;
+}
+
+.task-list-item.enabled label {
+cursor:pointer;
+}
+
+.task-list-item+.task-list-item {
+margin-top:3px;
+}
+
+.task-list-item-checkbox {
+display:inline-block;
+margin-left:-20px;
+margin-right:3px;
+vertical-align:1px;
+}
+</style>
+<script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+<script type="text/javascript">
+ //是否显示导航栏
+ var showNavBar = true;
+ //是否展开导航栏
+ var expandNavBar = true;
+ var currentIndex = 0;
+ var currentScrollHigh = 0;
+ var currentContentScrollHigh = 0;
+ function sleep(numberMillis) {  
+    var now = new Date();  
+    var exitTime = now.getTime() + numberMillis;  
+    while (true) {  
+        now = new Date();  
+        if (now.getTime() > exitTime)  
+        return;  
+        }  
+}
+
+
+$(window).onbeforeunload = function(){ 
+currentIndex = 0;
+} 
+
+
+ $(window).load(function(){
+    var h1s = $("body").find("h1");
+    var h2s = $("body").find("h2");
+    var h3s = $("body").find("h3");
+    var h4s = $("body").find("h4");
+    var h5s = $("body").find("h5");
+    var h6s = $("body").find("h6");
+
+    var headCounts = [h1s.length, h2s.length, h3s.length, h4s.length, h5s.length, h6s.length];
+    var vH1Tag = null;  // 显示的最高层级
+    var vH2Tag = null;   // 显示的最低层级
+var sum = 0;
+
+
+    for(var i = 0; i < headCounts.length; i++){
+          if(headCounts[i] > 0){
+		  for( var y = 0; y < headCounts[i]; y++)
+		         sum = sum + 1;
+		  }
+    }
+    for(var i = 0; i < headCounts.length; i++){
+        if(headCounts[i] > 0){
+            if(vH1Tag == null){
+                vH1Tag = 'h' + (i + 1);
+            }else{
+                vH2Tag = 'h' + (i + 1);
+            }
+        }
+    }
+    if(vH1Tag == null){
+        return;
+    }
+
+    $("body").prepend('<div class="BlogAnchor">' + 
+        '<span style="color:red;position:absolute;top:-6px;left:0px;cursor:pointer;" onclick="$(\'.BlogAnchor\').hide();">×</span>' +
+        '<p>' + 
+            '<b id="AnchorContentToggle" title="收起" style="cursor:pointer;">目录▲</b>' + 
+        '</p>' + 
+        '<div class="AnchorContent" id="AnchorContent"> </div>' + 
+    '</div>' );
+
+    var vH1Index = 0;
+    var vH2Index = 0;
+	
+	
+    var vIndexH1 = 0;
+    var vIndexH2 = 0;
+    var vIndexH3 = 0;
+    var vIndexH4 = 0;
+    var vIndexH5 = 0;
+    var vIndexH6 = 0;
+	var headerALL = [];
+	var headerIDALL = [];
+	var headerHightALL = [];
+    $("body").find("h1,h2,h3,h4,h5,h6").each(function(i,item){
+
+        var id = '';
+        var name = '';
+        var tag = $(item).get(0).tagName.toLowerCase();
+		var className = '';
+		// i=0 tag=h1          i=1 tag=h2     i=2 tag=h2
+
+        if(tag == "h1"){
+            id = name = ++vIndexH1;
+    vIndexH2 = 0;
+    vIndexH3 = 0;
+    vIndexH4 = 0;
+    vIndexH5 = 0;
+    vIndexH6 = 0;
+    className = 'item_h1';
+			
+//alert("tag ="+ tag +"----   i = "+ i + " name ="+ name +"    className= "+ className);
+//tag =h1----   i = 0 name =1    className= item_h1
+        }else if(tag == "h2"){
+		
+            id = vIndexH1 + '_' + ++vIndexH2;
+            name = vIndexH1 + '.' + vIndexH2;
+            className = 'item_h2'; 
+    vIndexH3 = 0;
+    vIndexH4 = 0;
+    vIndexH5 = 0;
+    vIndexH6 = 0;
+	
+       }else if(tag == "h3"){
+            id = vIndexH1 + '_' + vIndexH2+ '_' + ++vIndexH3;
+            name = vIndexH1 + '.' + vIndexH2+ '.' + +vIndexH3;
+            className = 'item_h3'; 
+    vIndexH4 = 0;
+    vIndexH5 = 0;
+    vIndexH6 = 0;
+	   
+	   }
+	   
+	   else if(tag == "h4"){
+            id = vIndexH1 + '_' + vIndexH2+ '_'  +vIndexH3 +'_'+ ++vIndexH4 ;
+            name =  vIndexH1 + '.' + vIndexH2+ '.'  +vIndexH3 +'.'+  vIndexH4 ;
+            className = 'item_h4';
+    vIndexH5 = 0;
+    vIndexH6 = 0; 
+	   }
+	   
+	   else if(tag == "h5"){
+            id = vIndexH1 + '_' + vIndexH2+ '_'  +vIndexH3 +'_' +vIndexH4+'_'+ ++vIndexH5;
+            name = vIndexH1 + '.' + vIndexH2+ '.'  +vIndexH3 +'.' +vIndexH4+'.'+ vIndexH5;
+            className = 'item_h5'; 
+            vIndexH6 = 0; 
+	   }
+	   
+	   else if(tag == "h6"){
+            id = vIndexH1 + '_' + vIndexH2+ '_'  +vIndexH3 +'_' +vIndexH4+'_' +vIndexH5+'_'+ ++vIndexH6;
+            name = vIndexH1 + '.' + vIndexH2+ '.'  +vIndexH3 +'.' +vIndexH4+'.' +vIndexH5+'.'+ vIndexH6;
+            className = 'item_h6'; 
+	   
+	   }
+	    if(name.length > 2){
+		
+		var mFirstName = name.substring(0,2);
+		while(mFirstName == "0."){
+		name = name.substring(2,name.length);
+		mFirstName = name.substring(0,2);
+         }
+		 
+		}
+        $(item).attr("id","wow"+id+"_index_"+i);
+        $(item).addClass("wow_head");
+		var itemHeight = $(item).offset().top
+        $("#AnchorContent").css('max-height', ($(document).height()) + 'px');
+		$("#AnchorContent").css('height', ($(window).height()) + 'px');
+		$("#AnchorContent").css('overflow','auto');
+        $("#AnchorContent").append('<li><a class="nav_item '+className+' anchor-link"  href="#wow'+id+'_index_'+i+'" link="#wow'+id+'" index="'+i+'">'+name+"✶"+$(this).text()+" "+'</a></li>');
+    	var str = "#wow"+id+"_index_"+i;
+		headerALL.push($(item));
+		headerIDALL.push(str);
+		console.log("  i = "+ i +"   id =" + id +"  itemHeight = "+ itemHeight);
+	});
+
+	// 1
+	// 1.1
+	// 1.1.1
+	// 1.1.1.1
+	// 1.1.1.1.1
+	// 1.1.1.1.1.1
+    $("#AnchorContentToggle").click(function(){
+        var text = $(this).html();
+        if(text=="目录▲"){
+            $(this).html("目录▼");
+            $(this).attr({"title":"展开"});
+        }else{
+            $(this).html("目录▲");
+            $(this).attr({"title":"收起"});
+        }
+        $("#AnchorContent").toggle();
+    });
+   
+   
+$(".anchor-link").click(function(){
+
+        //$("html,body").animate({scrollTop: $($(this).attr("link")).offset().top}, 10);
+		var index  = $(this).attr("index");
+                $(".BlogAnchor li .nav_item.current").removeClass('current');
+                $(headerNavs[index]).addClass('current');
+					  var scrollTop = $(window).scrollTop(); // 获得将要到达的点离顶距离
+					  currentScrollHigh = scrollTop;
+					  currentContentScrollHigh = headerHightALL[index];
+	  var value = headerTops[index];
+	  currentIndex = value;
+	  console.log("index = "+ index+ "  headerTops["+index+"] ="+ value + "scrollTop="+ scrollTop);
+    });
+
+	
+
+
+
+    var headerNavs = $(".BlogAnchor li .nav_item");
+    var headerTops = [];
+	var mHeight = 0;
+    $(".wow_head").each(function(i, n){
+	var value = $(n).offset().top;
+
+        headerTops.push($(n).offset().top);
+		 console.log("i = "+ i+ "  offset().top ="+ value);
+    });
+	headerTops.push($(document).height());
+
+window.onresize = function(){
+
+headerTops = [];
+$.each(headerNavs, function(i, n){
+$(n).trigger("click"); 
+document.querySelector(headerIDALL[i]).scrollIntoView(true);
+//var high = $(n).offset().top;
+var scrollTop = $(window).scrollTop();
+headerTops.push(scrollTop);
+console.log("headerNavs_index="+i +"   scrollTop="+scrollTop +"  headerTops="+headerTops[i]);
+}
+);
+headerTops.push($(document).height());
+
+//$("#AnchorContent").height($(window).height());
+$("#AnchorContent").css('height', ($(window).height()) + 'px');
+var xcontentWidth =  $("#AnchorContent").width();
+var xWidth = $(window).width();
+var xlength = xWidth - xcontentWidth;
+$("body").css("marginLeft",xcontentWidth+'px');
+$("body").css("max-width",xlength);
+
+$(headerNavs[currentIndex]).trigger("click"); 
+document.querySelector(headerIDALL[i]).scrollIntoView(true);
+
+
+}
+
+
+
+
+
+	
+	
+
+
+$(window).scroll(function(){
+        var scrollTop = $(window).scrollTop(); // 获得将要到达的点离顶距离
+
+		$.each(headerTops, function(i, n){
+            if( (scrollTop >= (headerTops[i])  && scrollTop < (headerTops[i+1] -1))  ){
+                console.log("headerTops[i-1]"+headerTops[i-1]+"headerTops[i]"+headerTops[i]+"  scrollTop ="+ scrollTop+"  headerTops[i+1]= "+headerTops[i+1] +"  i ="+i);
+                $(".BlogAnchor li .nav_item.current").removeClass('current');
+                $(headerNavs[i]).addClass('current');
+				currentScrollHigh = scrollTop;
+				currentContentScrollHigh = headerHightALL[i];
+				currentIndex = i;
+				var mxxHeight = $("#AnchorContent").height()
+				var mscrollTop1 = $("#AnchorContent").scrollTop();  // 当前标签的高度
+			console.log("zukgit2 currentIndex="+ currentIndex );
+				console.log("zukgit2 windows.scrollTop="+ scrollTop );
+				console.log("zukgit2 $(window).height()="+ $(window).height() );
+				console.log("zukgit2 currentContentScrollHigh="+ currentContentScrollHigh );
+				console.log("zukgit2 AnchorContent.mscrollTop="+ mscrollTop1 );
+				console.log("zukgit2 AnchorContent.high="+ mxxHeight );
+				if((currentContentScrollHigh - mscrollTop1)>  ($(window).height()/2)){ //↓ // 如果当前index超出  界面的高度
+				//var sum =   Math.floor(headerHightALL(i) / $(window).height());
+				var dif = currentContentScrollHigh - mscrollTop1;
+				$("#AnchorContent").animate({scrollTop: (currentContentScrollHigh)}, 50);
+				console.log("  i(zukgit3) = "+ i +"   currentContentScrollHigh =" + currentContentScrollHigh +"  mscrollTop1 = "+ mscrollTop1);
+				console.log(" $(window).height()="+ $(window).height() );
+				
+				} else if( ( mscrollTop1 - currentContentScrollHigh )>  0 ){  //↑
+				$("#AnchorContent").animate({scrollTop: currentContentScrollHigh-($("#AnchorContent").height()/3)}, 50);
+				console.log("  i(zukgit4) = "+ i +"   currentContentScrollHigh =" + currentContentScrollHigh +"  mscrollTop1 = "+ mscrollTop1);
+				console.log(" $(window).height()="+ $(window).height() +"   $(#AnchorContent).height()="+mxxHeight);
+				}
+
+                return false;
+            }
+        }
+		);
+		if(scrollTop == 0){
+        $("#AnchorContent").animate({scrollTop: 0}, 50);
+		}
+		if(scrollTop == $(document).height()){
+        $("#AnchorContent").animate({scrollTop: headerHightALL[headerHightALL.length-1]}, 50);
+		}
+    });
+
+	
+$.each(headerNavs, function(i, n){
+var high = $(n).offset().top;
+headerHightALL.push(high);
+console.log("high"+high);
+}
+);
+
+
+headerTops = [];
+$.each(headerNavs, function(i, n){
+
+$(n).trigger("click"); 
+document.querySelector(headerIDALL[i]).scrollIntoView(true);
+
+var scrollTop = $(window).scrollTop();
+
+headerTops.push(scrollTop);
+console.log("headerNavs_index="+i +"   scrollTop="+scrollTop +"  headerTops="+headerTops[i]);
+
+}
+);
+
+
+
+headerTops.push($(document).height());
+$(headerNavs[0]).trigger("click"); 
+document.querySelector(headerIDALL[0]).scrollIntoView(true);
+
+
+
+
+var xcontentWidth =  $("#AnchorContent").width();
+var xWidth = $(window).width();
+var xlength = xWidth - xcontentWidth;
+$("body").css("marginLeft",xcontentWidth+'px');
+$("body").css("max-width",xlength);
+
+    if(!showNavBar){
+        $('.BlogAnchor').hide();
+    }
+    if(!expandNavBar){
+        $(this).html("目录▼");
+        $(this).attr({"title":"展开"});
+        $("#AnchorContent").hide();
+    }
+ });
+ 
+ 
+ 
+</script>
+<style>
+    /*导航*/
+    .BlogAnchor {
+        //background: #f1f1f1;
+		background: #ffffff;
+        //padding: 10px;
+        line-height: 180%;
+        position: fixed;
+        left: 0px;   // right: 48px;  
+        top: 0px;
+        border: 1px solid #aaaaaa;
+		width: 20%;
+	    height:100%;
+    }
+    .BlogAnchor p {
+        font-size: 18px;
+        color: #15a230;
+        margin: 0 0 0.3rem 0;
+        text-align: right;
+    }
+    .BlogAnchor .AnchorContent {
+        //padding: 5px 0px;
+        overflow: auto;
+
+    }
+    .BlogAnchor li{
+        text-indent: 0.5rem;
+        font-size: 14px;
+        list-style: none;
+    }
+    .BlogAnchor li .nav_item{
+        padding: 3px;
+    }
+    .BlogAnchor li .item_h1{
+        margin-left: 0rem;
+    }
+    .BlogAnchor li .item_h2{
+        margin-left: 2rem;
+        font-size: 0.8rem;
+    }
+	
+    .BlogAnchor li .item_h3{
+        margin-left: 4rem;
+        font-size: 0.8rem;
+    }
+	
+	.BlogAnchor li .item_h4{
+        margin-left: 5rem;
+        font-size: 0.8rem;
+    }
+	
+	.BlogAnchor li .item_h5{
+        margin-left: 6rem;
+        font-size: 0.8rem;
+    }
+	
+	
+	.BlogAnchor li .item_h6{
+        margin-left: 7rem;
+        font-size: 0.8rem;
+    }
+	
+    .BlogAnchor li .nav_item.current{
+        color: white;
+        background-color: #5cc26f;
+    }
+    #AnchorContentToggle {
+        font-size: 13px;
+        font-weight: normal;
+        color: #FFF;
+        display: inline-block;
+        line-height: 20px;
+        background: #5cc26f;
+        font-style: normal;
+        padding: 1px 8px;
+    }
+    .BlogAnchor a:hover {
+        color: #5cc26f;
+    }
+    .BlogAnchor a {
+        text-decoration: none;
+    }
+</style>
+</head>
+<body>
+<h1 id="-8-0-hotpot-ui-">安卓8.0 热点Hotpot UI界面分析</h1>
+<h2 id="-ui-useraction">各个UI UserAction</h2>
+<p><img src="img_hotpot/1.png" width = "25%" height="25%"/><img src="img_hotpot/2.png" width = "25%" height="25%"/><img src="img_hotpot/3.png" width = "25%" height="25%"/><img src="img_hotpot/4.png" width = "25%" height="25%"/></p>
+<p><img src="img_hotpot/5.png" width = "25%" height="25%"/><img src="img_hotpot/6.png" width = "25%" height="25%"/><img src="img_hotpot/7.png" width = "25%" height="25%"/><img src="img_hotpot/8.png" width = "25%" height="25%"/></p>
+<h2 id="wifi-ua1-">WIFI热点 UA1分析</h2>
+<h3 id="ua1-">UA1 操作列</h3>
+<ol>
+<li><strong>UA编号</strong>   UA1</li><li><strong>UA说明</strong>  <strong> WIFI热点设置界面入口</strong>  在network_and_internet.xml布局文件的Preference指定了Fragment  android:fragment=&quot;com.android.settings.TetherSettings&quot;</li><li><strong>UA触发函数</strong>  NetworkDashboardFragment 继承的父类DashboardFragment的点击事件 onPreferenceTreeClick ， 最终调用到父父类  PreferenceFragment的onPreferenceTreeClick方法<br>最终回调SettingsActivity.java  实现了 OnPreferenceStartFragmentCallback 接口</li><li><p><strong>UA字符可选值</strong>   移动热点与网络共享</p>
+</li><li><p><strong>UA布局及ID</strong> 当前的UI为<br>Activity: [NetworkDashboardActivity] SettingsActivity.java  实现了 OnPreferenceStartFragmentCallback 接口<br>Fragment:NetworkDashboardFragment</p>
+</li><li><strong>代码Key</strong>     </li><li><strong>代码可选值  </strong></li><li><strong>数据库Key </strong> </li><li><strong>数据库可选值 </strong> </li><li><strong>SP的Key</strong>  </li><li><strong>SP可选值</strong>  </li><li><strong>UA操作后UI显示类</strong>  </li><li><strong>UA触发函数所在类</strong>   <a href="file/AndroidManifest.xml">Manifest</a>【加载 NetworkDashboardFragment 页面】</li></ol>
+<hr>
+<h3 id="ua1-">UA1代码分析</h3>
+<pre><code>标题字符串
+ &lt;string name=&quot;tether_settings_title_all&quot; &gt;&quot;热点和网络共享&quot;&lt;/string&gt;
+
+
+Androidmanifest.xml 定义的热点设置界面Activity
+ &lt;activity android:name=&quot;Settings$TetherSettingsActivity&quot;
+        android:label=&quot;@string/tether_settings_title_all&quot;
+        android:icon=&quot;@drawable/ic_settings_wireless&quot;
+        android:taskAffinity=&quot;&quot;&gt;
+    &lt;intent-filter&gt;
+        &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;
+        &lt;category android:name=&quot;android.intent.category.DEFAULT&quot; /&gt;
+        &lt;category android:name=&quot;android.intent.category.VOICE_LAUNCH&quot; /&gt;
+        &lt;category android:name=&quot;com.android.settings.SHORTCUT&quot; /&gt;
+    &lt;/intent-filter&gt;
+    &lt;meta-data android:name=&quot;com.android.settings.FRAGMENT_CLASS&quot;
+        android:value=&quot;com.android.settings.TetherSettings&quot; /&gt;
+&lt;/activity&gt;
+
+
+
+/packages/apps/Settings/src/com/android/settings/network/NetworkDashboardFragment.java
+public class NetworkDashboardFragment extends DashboardFragment implements MobilePlanPreferenceController.MobilePlanPreferenceHost {
+
+   @Override
+    protected List&lt;PreferenceController&gt; getPreferenceControllers(Context context) {
+
+     final List&lt;PreferenceController&gt; controllers = new ArrayList&lt;&gt;();
+    //  热点网络的 Preference     
+     controllers.add(new TetherPreferenceController(context, lifecycle));
+
+    }
+
+
+
+    ]
+
+
+    NetworkDashboardFragment 的父类  DashboardFragment
+/packages/apps/Settings/src/com/android/settings/network/NetworkDashboardFragment.java
+
+public abstract class DashboardFragment extends SettingsPreferenceFragment  implements SettingsDrawerActivity.CategoryListener, Indexable, SummaryLoader.SummaryConsumer {
+
+    @Override   //NetworkDashboardFragment下的 Preference的点击事件
+    public boolean onPreferenceTreeClick(Preference preference) {
+        Collection&lt;PreferenceController&gt; controllers = mPreferenceControllers.values();
+        // If preference contains intent, log it before handling.
+        mMetricsFeatureProvider.logDashboardStartIntent(getContext(), preference.getIntent(), getMetricsCategory());
+        // Give all controllers a chance to handle click.
+        for (PreferenceController controller : controllers) {
+            if (controller.handlePreferenceTreeClick(preference)) {  //  View 的点击事件会去 遍历 所有的 PreferenceController  问他们是否处理事件    处理就返回true  不处理 就返回false
+                return true;
+            }
+        }
+        return super.onPreferenceTreeClick(preference);  // 点击当前的Preference时  调用父类的onPreferenceTreeClick
+    }
+
+
+DashboardFragment 的父类  SettingsPreferenceFragment
+/packages/apps/Settings/src/com/android/settings/SettingsPreferenceFragment.java
+public abstract class SettingsPreferenceFragment extends InstrumentedPreferenceFragment  implements DialogCreatable {}
+
+
+ SettingsPreferenceFragment 的父类 InstrumentedPreferenceFragment
+/packages/apps/Settings/src/com/android/settings/core/InstrumentedPreferenceFragment.java
+public abstract class InstrumentedPreferenceFragment extends ObservablePreferenceFragment  implements Instrumentable {}
+
+
+InstrumentedPreferenceFragment 的父类  ObservablePreferenceFragment
+ /packages/apps/Settings/src/com/android/settings/core/lifecycle/ObservablePreferenceFragment.java
+public abstract class ObservablePreferenceFragment extends PreferenceFragment {}
+
+
+ObservablePreferenceFragment 的父类  PreferenceFragment.java
+/frameworks/base/core/java/android/preference/PreferenceFragment.java   // 尼玛这一层层的继承
+
+
+public abstract class PreferenceFragment extends Fragment implements PreferenceManager.OnPreferenceTreeClickListener {
+
+    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen,Preference preference) {
+        if (preference.getFragment() != null &amp;&amp; getActivity() instanceof OnPreferenceStartFragmentCallback) {  // 当前Activity 实现了 OnPreferenceStartFragmentCallback
+            return ((OnPreferenceStartFragmentCallback)getActivity()).onPreferenceStartFragment(this, preference);  // 执行切换 Fragment 的操作
+        }
+        return false;
+    }
+
+
+        public interface OnPreferenceStartFragmentCallback {  // SettingsActivity 实现了这个接口
+        boolean onPreferenceStartFragment(PreferenceFragment caller, Preference pref);
+    }
+
+
+/packages/apps/Settings/src/com/android/settings/SettingsActivity.java  【  [NetworkDashboardActivity] SettingsActivity.java 】
+public class SettingsActivity extends SettingsDrawerActivity
+        implements PreferenceManager.OnPreferenceTreeClickListener,
+        PreferenceFragment.OnPreferenceStartFragmentCallback【实现的接口】,
+        ButtonBarHandler, FragmentManager.OnBackStackChangedListener {
+
+
+
+    @Override   SettingsActivity.java 
+    public boolean onPreferenceStartFragment(PreferenceFragment caller, Preference pref) {
+        startPreferencePanel(caller, pref.getFragment(), pref.getExtras(), -1, pref.getTitle(),null, 0);
+        return true;
+    }
+
+    SettingsActivity.java 
+    public void startPreferencePanel(Fragment caller, String fragmentClass, Bundle args,int titleRes, CharSequence titleText, Fragment resultTo, int resultRequestCode) {
+        String title = null;
+        if (titleRes &lt; 0) {
+            if (titleText != null) {
+                title = titleText.toString();
+            } else {
+                title = &quot;&quot;;
+            }
+        }
+        // 完成 跳转  【在布局文件中定义了  热点设置的 Fragment   android:fragment=&quot;com.android.settings.TetherSettings&quot; 】
+        Utils.startWithFragment(this, fragmentClass, args, resultTo, resultRequestCode,titleRes, title, mIsShortcut, mMetricsFeatureProvider.getMetricsCategory(caller));
+    }
+    }
+
+
+
+
+
+
+/frameworks/base/packages/SettingsLib/src/com/android/settingslib/RestrictedPreference.java
+public class RestrictedPreference extends TwoTargetPreference {}  【View】
+
+/frameworks/base/packages/SettingsLib/src/com/android/settingslib/TwoTargetPreference.java
+public class TwoTargetPreference extends Preference {}
+
+
+/packages/apps/Settings/src/com/android/settings/network/TetherPreferenceController.java
+public class TetherPreferenceController extends PreferenceController {  【Controller】
+
+/packages/apps/Settings/src/com/android/settings/core/PreferenceController.java
+public abstract class PreferenceController extends AbstractPreferenceController {}
+</code></pre><h3 id="ua1-">UA1布局分析</h3>
+<p><img src="img_hotpot/1.png" width = "25%" height="25%"/></p>
+<pre><code>packages/apps/Settings/res/xml/network_and_internet.xml
+
+&lt;PreferenceScreen
+    xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    xmlns:settings=&quot;http://schemas.android.com/apk/res/com.android.settings&quot;
+    android:title=&quot;@string/network_dashboard_title&quot;&gt;
+
+    &lt;com.android.settings.widget.MasterSwitchPreference
+        android:fragment=&quot;com.android.settings.wifi.WifiSettings&quot;
+        android:key=&quot;toggle_wifi&quot;
+        android:title=&quot;@string/wifi_settings&quot; 【WLAN】
+【&lt;string name=&quot;summary_placeholder&quot; &gt;&amp;#160;&lt;/string&gt; 由WIFI状态动态设置 这里只是占位符】
+        android:summary=&quot;@string/summary_placeholder&quot; 
+        android:icon=&quot;@drawable/ic_settings_wireless&quot;
+        android:order=&quot;-30&quot;&gt;
+【在配置每个Preference元素节点时，我们可以显示为点击它时所跳转的Intent。点击该Preference，跳转至目标Intent】
+        &lt;intent
+            android:action=&quot;android.settings.WIFI_SETTINGS&quot;
+            android:targetClass=&quot;Settings$WifiSettingsActivity&quot;/&gt; // WifiSettingsActivity 目标类名 
+    &lt;/com.android.settings.widget.MasterSwitchPreference&gt;
+
+    &lt;com.android.settingslib.RestrictedPreference
+        android:key=&quot;mobile_network_settings&quot;
+        android:title=&quot;@string/network_settings_title&quot;
+        android:icon=&quot;@drawable/ic_network_cell&quot;
+        android:dependency=&quot;toggle_airplane&quot;
+        android:order=&quot;-15&quot;
+        settings:keywords=&quot;@string/keywords_more_mobile_networks&quot;
+        settings:userRestriction=&quot;no_config_mobile_networks&quot;
+        settings:useAdminDisabledSummary=&quot;true&quot;&gt;
+        &lt;intent
+            android:action=&quot;android.intent.action.MAIN&quot;
+            android:targetPackage=&quot;com.android.phone&quot;
+            android:targetClass=&quot;com.android.phone.MobileNetworkSettings&quot;/&gt;
+    &lt;/com.android.settingslib.RestrictedPreference&gt;
+
+    &lt;com.android.settingslib.RestrictedPreference  【RestrictedPreference点击事件】
+     【指定打开fragment -- TetherSettings】   
+        android:fragment=&quot;com.android.settings.TetherSettings&quot;      android:key=&quot;tether_settings&quot;
+        【&lt;string name=&quot;tether_settings_title_all&quot;&gt;&quot;热点和网络共享&quot;&lt;/string&gt;】
+        android:title=&quot;@string/tether_settings_title_all&quot;
+        android:icon=&quot;@drawable/ic_wifi_tethering&quot;
+        android:order=&quot;-5&quot;
+        android:summary=&quot;@string/summary_placeholder&quot;
+        settings:userRestriction=&quot;no_config_tethering&quot;
+        settings:useAdminDisabledSummary=&quot;true&quot;/&gt;
+
+    &lt;com.android.settingslib.RestrictedPreference
+        android:fragment=&quot;com.android.settings.vpn2.VpnSettings&quot;
+        android:key=&quot;vpn_settings&quot;
+        android:title=&quot;@string/vpn_settings_title&quot;
+        android:icon=&quot;@drawable/ic_vpn_key&quot;
+        android:order=&quot;0&quot;
+        android:summary=&quot;@string/summary_placeholder&quot;
+        settings:userRestriction=&quot;no_config_vpn&quot;
+        settings:useAdminDisabledSummary=&quot;true&quot;/&gt;
+
+    &lt;com.android.settingslib.RestrictedPreference
+        android:key=&quot;manage_mobile_plan&quot;
+        android:title=&quot;@string/manage_mobile_plan_title&quot;
+        android:persistent=&quot;false&quot;
+        settings:userRestriction=&quot;no_config_mobile_networks&quot;
+        settings:useAdminDisabledSummary=&quot;true&quot;/&gt;
+
+    &lt;SwitchPreference
+        android:key=&quot;toggle_airplane&quot;
+        android:title=&quot;@string/airplane_mode&quot;
+        android:icon=&quot;@drawable/ic_airplanemode_active&quot;
+        android:disableDependentsState=&quot;true&quot;
+        android:order=&quot;5&quot;/&gt;
+
+    &lt;Preference
+        android:fragment=&quot;com.android.settings.ProxySelector&quot;
+        android:key=&quot;proxy_settings&quot;
+        android:title=&quot;@string/proxy_settings_title&quot;/&gt;
+
+&lt;/PreferenceScreen&gt;
+</code></pre><h2 id="wifi-ua2-">WIFI热点 UA2分析</h2>
+<p><img src="img_hotpot/2.png" width = "25%" height="25%"/></p>
+<h3 id="ua2-">UA2 操作列</h3>
+<ol>
+<li><strong>UA编号</strong>   UA2</li><li><strong>UA说明</strong>  <strong> WIFI热点设置主界面</strong>  Fragment: TetherSettings </li><li><strong>UA触发函数</strong>  TetherSettings 的 onPreferenceChange函数   是 点击事件处理函数</li><li><strong>UA字符可选值</strong>   </li><li><strong>UA布局及ID</strong> 在network_and_internet.xml布局文件的Preference指定了Fragment  android:fragment=&quot;com.android.settings.TetherSettings&quot; 当前所在的Fragment TetherSettings<br>当前的UI为<br>Activity: [NetworkDashboardActivity] SettingsActivity.java  实现了 OnPreferenceStartFragmentCallback 接口<br>Fragment:TetherSettings</li><li><strong>代码Key</strong>     </li><li><strong>代码可选值  </strong></li><li><strong>数据库Key </strong> </li><li><strong>数据库可选值 </strong> </li><li><strong>SP的Key</strong>  </li><li><strong>SP可选值</strong>  </li><li><strong>UA操作后UI显示类</strong>  </li><li><strong>UA触发函数所在类</strong>  </li></ol>
+<hr>
+<h3 id="ua2-">UA2代码分析</h3>
+<pre><code>/packages/apps/Settings/src/com/android/settings/TetherSettings.java
+
+public class TetherSettings extends RestrictedSettingsFragment
+        implements DialogInterface.OnClickListener, Preference.OnPreferenceChangeListener,
+        DataSaverBackend.Listener {
+
+    private static final String USB_TETHER_SETTINGS = &quot;usb_tether_settings&quot;;
+    private static final String ENABLE_WIFI_AP = &quot;enable_wifi_ap&quot;;
+    private static final String ENABLE_BLUETOOTH_TETHERING = &quot;enable_bluetooth_tethering&quot;;
+    private static final String TETHER_CHOICE = &quot;TETHER_TYPE&quot;;
+    private static final String DATA_SAVER_FOOTER = &quot;disabled_on_data_saver&quot;;
+    private static final String WIFI_AP_SSID_AND_SECURITY = &quot;wifi_ap_ssid_and_security&quot;;
+    private static final int CONFIG_SUBTEXT = R.string.wifi_tether_configure_subtext;
+
+    private ConnectivityManager mCm;  // 连接管理类
+    private SwitchPreference mEnableWifiAp;  // WIFI热点开启按钮
+
+        @Override    TetherSettings
+    public void onCreate(Bundle icicle) {
+        super.onCreate(icicle);
+        addPreferencesFromResource(R.xml.tether_prefs);   【xml布局文件】
+        mFooterPreferenceMixin.createFooterPreference().setTitle(R.string.tethering_footer_info);
+        mEnableWifiAp = (SwitchPreference) findPreference(ENABLE_WIFI_AP);  【初始化 WIFI热点Preference 】
+        mEnableWifiAp.setOnPreferenceChangeListener(this);  【设置点击监听事件处理函数】
+       ......
+       ConnectivityManager mCm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+       }
+
+
+
+    @Override   TetherSettings     【setOnPreferenceChangeListener 的  接口函数实现】
+    public boolean onPreferenceChange(Preference preference, Object value) {
+        boolean enable = (Boolean) value;  // 获取到当前 switch按钮的booean开关状态
+
+        if (enable) {   // 如果为true   则打开  wifi热点 
+            startTethering(TETHERING_WIFI);
+        } else {    // 如果为false    则关闭wifi热点 
+            mCm.stopTethering(TETHERING_WIFI);
+        }
+        return false;
+    }
+
+
+
+    private void startTethering(int choice) {
+        if (choice == TETHERING_BLUETOOTH) {
+            // Turn on Bluetooth first.
+            BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+            if (adapter.getState() == BluetoothAdapter.STATE_OFF) {
+                mBluetoothEnableForTether = true;
+                adapter.enable();
+                mBluetoothTether.setSummary(R.string.bluetooth_turning_on);
+                mBluetoothTether.setEnabled(false);
+                return;
+            }
+        }
+        //  ConnectivityManager.startTethering
+        mCm.startTethering(choice, true, mStartTetheringCallback, mHandler);  【开启 WIFI热点】  // ▲1. Framework 分析时  继续往下 分析
+    }
+
+
+    //  ConnectivityManager.stopTethering
+     mCm.stopTethering(TETHERING_WIFI);  【关闭 WIFI热点】  // ▲2. Framework 分析时  继续往下 分析
+</code></pre><h3 id="ua2-">UA2布局分析</h3>
+<pre><code>
+&lt;string name=&quot;wifi_tether_checkbox_text&quot; &gt;&quot;便携式WLAN热点【移动热点】&quot;&lt;/string&gt;
+
+
+/packages/apps/Settings/res/xml/tether_prefs.xml
+&lt;PreferenceScreen xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+                  xmlns:settings=&quot;http://schemas.android.com/apk/res-auto&quot;&gt;
+
+    &lt;SwitchPreference
+        android:key=&quot;usb_tether_settings&quot;
+        android:title=&quot;@string/usb_tethering_button_text&quot; /&gt;
+
+    &lt;SwitchPreference
+        android:key=&quot;enable_wifi_ap&quot;  【【移动热点】】
+        android:title=&quot;@string/wifi_tether_checkbox_text&quot;
+        android:summary=&quot;@string/summary_two_lines_placeholder&quot; /&gt;
+
+    &lt;Preference
+        android:key=&quot;wifi_ap_ssid_and_security&quot;
+        android:title=&quot;@string/wifi_tether_configure_ap_text&quot;
+        android:persistent=&quot;false&quot; /&gt;
+
+    &lt;SwitchPreference
+        android:key=&quot;enable_bluetooth_tethering&quot;
+        android:title=&quot;@string/bluetooth_tether_checkbox_text&quot; /&gt;
+
+    &lt;Preference
+        android:key=&quot;disabled_on_data_saver&quot;
+        android:summary=&quot;@string/tether_settings_disabled_on_data_saver&quot;
+        android:selectable=&quot;false&quot;
+        settings:allowDividerAbove=&quot;true&quot; /&gt;
+&lt;/PreferenceScreen&gt;
+</code></pre><h2 id="wifi-ua3-">WIFI热点 UA3分析</h2>
+<h3 id="ua3-">UA3 操作列</h3>
+<p><img src="img_hotpot/2.png" width = "25%" height="25%"/></p>
+<ol>
+<li><strong>UA编号</strong>   UA3</li><li><strong>UA说明</strong>  <strong> WIFI移动热点详细设置界面入口</strong>  </li><li><strong>UA触发函数</strong>   TetherSettings 的 onPreferenceTreeClick 函数</li><li><p><strong>UA字符可选值</strong>   【设置WLAN热点【移动热点设置】】</p>
+</li><li><p><strong>UA布局及ID</strong> 在network_and_internet.xml布局文件的Preference指定了Fragment  android:fragment=&quot;com.android.settings.TetherSettings&quot; 当前所在的Fragment TetherSettings<br>当前的UI为<br>Activity: [NetworkDashboardActivity] SettingsActivity.java  实现了 OnPreferenceStartFragmentCallback 接口<br>Fragment:TetherSettings</p>
+</li><li><strong>代码Key</strong>     </li><li><strong>代码可选值  </strong></li><li><strong>数据库Key </strong> </li><li><strong>数据库可选值 </strong> </li><li><strong>SP的Key</strong>  </li><li><strong>SP可选值</strong>  </li><li><strong>UA操作后UI显示类</strong>  </li><li><strong>UA触发函数所在类</strong>  </li></ol>
+<hr>
+<h3 id="ua3-">UA3代码分析</h3>
+<pre><code>/packages/apps/Settings/src/com/android/settings/TetherSettings.java
+
+public class TetherSettings extends RestrictedSettingsFragment
+        implements DialogInterface.OnClickListener, Preference.OnPreferenceChangeListener,
+        DataSaverBackend.Listener {
+
+ private static final int DIALOG_AP_SETTINGS = 1;
+
+private Preference mCreateNetwork;  // WIFI热点配置
+
+private static final String WIFI_AP_SSID_AND_SECURITY = &quot;wifi_ap_ssid_and_security&quot;;
+
+        @Override    TetherSettings
+    public void onCreate(Bundle icicle) {
+        super.onCreate(icicle);
+        mCreateNetwork = findPreference(WIFI_AP_SSID_AND_SECURITY);
+......
+}
+
+
+    &lt;string-array name=&quot;wifi_ap_security&quot;&gt;
+        &lt;item&gt;@string/wifi_security_none&lt;/item&gt;
+        &lt;item&gt;@string/wifi_security_wpa2&lt;/item&gt;
+    &lt;/string-array&gt;
+
+
+
+    private void initWifiTethering() {
+        final Activity activity = getActivity();
+        mWifiConfig = mWifiManager.getWifiApConfiguration();
+        mSecurityType = getResources().getStringArray(R.array.wifi_ap_security);
+
+        mCreateNetwork = findPreference(WIFI_AP_SSID_AND_SECURITY);
+
+        mRestartWifiApAfterConfigChange = false;
+
+        if (mWifiConfig == null) {
+        //  &lt;string name=&quot;wifi_tether_configure_ssid_default&quot;&gt;&quot;Android热点&quot;&lt;/string&gt;
+            final String s = activity.getString(com.android.internal.R.string.wifi_tether_configure_ssid_default);
+            mCreateNetwork.setSummary(String.format(activity.getString(CONFIG_SUBTEXT),s, mSecurityType[WifiApDialog.OPEN_INDEX]));
+        } else {
+            int index = WifiApDialog.getSecurityTypeIndex(mWifiConfig);
+            mCreateNetwork.setSummary(String.format(activity.getString(CONFIG_SUBTEXT),mWifiConfig.SSID,mSecurityType[index]));
+        }
+    }
+
+
+
+    @Override
+    public boolean onPreferenceTreeClick(Preference preference) {
+        if (preference == mUsbTether) {
+            if (mUsbTether.isChecked()) {
+                startTethering(TETHERING_USB);
+            } else {
+                mCm.stopTethering(TETHERING_USB);
+            }
+        } else if (preference == mBluetoothTether) {
+            if (mBluetoothTether.isChecked()) {
+                startTethering(TETHERING_BLUETOOTH);
+            } else {
+                mCm.stopTethering(TETHERING_BLUETOOTH);
+                // No ACTION_TETHER_STATE_CHANGED is fired or bluetooth unless a device is
+                // connected. Need to update state manually.
+                updateState();
+            }
+        } else if (preference == mCreateNetwork) {  //   点击  WIFI热点设置Preference
+            showDialog(DIALOG_AP_SETTINGS);
+        }
+
+        return super.onPreferenceTreeClick(preference);
+    }
+
+
+
+/packages/apps/Settings/src/com/android/settings/SettingsPreferenceFragment.java     TetherSettings.java的父父类
+    protected void showDialog(int dialogId) {
+        if (mDialogFragment != null) {
+            Log.e(TAG, &quot;Old dialog fragment not null!&quot;);
+        }
+        mDialogFragment = new SettingsDialogFragment(this, dialogId);
+        mDialogFragment.show(getChildFragmentManager(), Integer.toString(dialogId));  // 显示 mDialogFragment
+    }
+
+
+
+ public static class SettingsDialogFragment extends InstrumentedDialogFragment {  //  SettingsPreferenceFragment  的 内部类
+
+private static final String KEY_DIALOG_ID = &quot;key_dialog_id&quot;;
+private static final String KEY_PARENT_FRAGMENT_ID = &quot;key_parent_fragment_id&quot;;
+
+private Fragment mParentFragment;
+
+private DialogInterface.OnCancelListener mOnCancelListener;
+private DialogInterface.OnDismissListener mOnDismissListener;
+
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            if (savedInstanceState != null) {
+                mDialogId = savedInstanceState.getInt(KEY_DIALOG_ID, 0);
+                mParentFragment = getParentFragment();
+                int mParentFragmentId = savedInstanceState.getInt(KEY_PARENT_FRAGMENT_ID, -1);
+                if (mParentFragment == null) {
+                    mParentFragment = getFragmentManager().findFragmentById(mParentFragmentId);
+                }
+                if (!(mParentFragment instanceof DialogCreatable)) {
+                    throw new IllegalArgumentException(
+                            (mParentFragment != null
+                                    ? mParentFragment.getClass().getName()
+                                    : mParentFragmentId)
+                                    + &quot; must implement &quot;
+                                    + DialogCreatable.class.getName());
+                }
+                // This dialog fragment could be created from non-SettingsPreferenceFragment
+                if (mParentFragment instanceof SettingsPreferenceFragment) {
+                    // restore mDialogFragment in mParentFragment
+                    ((SettingsPreferenceFragment) mParentFragment).mDialogFragment = this;
+                }
+            }
+            return ((DialogCreatable) mParentFragment).onCreateDialog(mDialogId);  // 调用子 类  TetherSettings.java  的  onCreateDialog  方法
+        }
+
+ }
+
+
+
+
+ /packages/apps/Settings/src/com/android/settings/TetherSettings.java
+     @Override
+    public Dialog onCreateDialog(int id) {
+        if (id == DIALOG_AP_SETTINGS) {
+            final Activity activity = getActivity();
+            mDialog = new WifiApDialog(activity, this, mWifiConfig);  // 创建 WifiApDialog 
+            return mDialog;
+        }
+
+        return null;
+    }
+
+
+
+/packages/apps/Settings/src/com/android/settings/wifi/WifiApDialog.java
+
+public class WifiApDialog extends AlertDialog implements View.OnClickListener,
+        TextWatcher, AdapterView.OnItemSelectedListener {
+
+    public WifiApDialog(Context context, DialogInterface.OnClickListener listener, WifiConfiguration wifiConfig) {
+        super(context);
+        mListener = listener;
+        mWifiConfig = wifiConfig;
+        if (wifiConfig != null) {
+            mSecurityTypeIndex = getSecurityTypeIndex(wifiConfig);
+        }
+        mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        mContext =  context;
+    }
+
+
+}
+
+
+/packages/apps/Settings/src/com/android/settings/wifi/WifiApDialog.java
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        boolean mInit = true;
+        mView = getLayoutInflater().inflate(R.layout.wifi_ap_dialog, null);
+        Spinner mSecurity = ((Spinner) mView.findViewById(R.id.security));  // 选择安全加密方式的 Spinner
+        final Spinner mChannel = (Spinner) mView.findViewById(R.id.choose_channel);
+
+        setView(mView);
+        setInverseBackgroundForced(true);
+
+        Context context = getContext();
+// &lt;string name=&quot;wifi_tether_configure_ap_text&quot; &quot;设置WLAN热点&quot;&lt;/string&gt;   
+        setTitle(R.string.wifi_tether_configure_ap_text);
+        mView.findViewById(R.id.type).setVisibility(View.VISIBLE);
+        mSsid = (TextView) mView.findViewById(R.id.ssid);
+        mPassword = (EditText) mView.findViewById(R.id.password);
+
+        ArrayAdapter &lt;CharSequence&gt; channelAdapter;
+        String countryCode = mWifiManager.getCountryCode();
+        if (!mWifiManager.isDualBandSupported() || countryCode == null) {  // 只支持2.4G的话 
+            channelAdapter = ArrayAdapter.createFromResource(mContext, R.array.wifi_ap_band_config_2G_only, android.R.layout.simple_spinner_item);
+            mWifiConfig.apBand = 0;
+        } else {
+            channelAdapter = ArrayAdapter.createFromResource(mContext,R.array.wifi_ap_band_config_full, android.R.layout.simple_spinner_item);
+        }
+
+
+    &lt;string-array name=&quot;wifi_ap_band_config_2G_only&quot;&gt;
+        &lt;item&gt;@string/wifi_ap_choose_2G&lt;/item&gt;
+    &lt;/string-array&gt;
+
+    &lt;string-array name=&quot;wifi_ap_band_config_full&quot;&gt;
+        &lt;item&gt;@string/wifi_ap_choose_2G&lt;/item&gt;
+        &lt;item&gt;@string/wifi_ap_choose_5G&lt;/item&gt;
+    &lt;/string-array&gt;
+
+
+
+        channelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//   private final DialogInterface.OnClickListener mListener;
+        setButton(BUTTON_SUBMIT, context.getString(R.string.wifi_save), mListener);   // 保存   监听器为  mListener
+        setButton(DialogInterface.BUTTON_NEGATIVE,
+        context.getString(R.string.wifi_cancel), mListener);    // 取消  监听器为  mListener
+
+        if (mWifiConfig != null) {
+            mSsid.setText(mWifiConfig.SSID);  // 如果 WifiConfig  不为空 那么设置 ssid
+            if (mWifiConfig.apBand == 0) {
+               mBandIndex = 0;
+            } else {
+               mBandIndex = 1;
+            }
+
+            mSecurity.setSelection(mSecurityTypeIndex);
+            if (mSecurityTypeIndex == WPA2_INDEX) {
+                mPassword.setText(mWifiConfig.preSharedKey);
+            }
+        }
+
+        mChannel.setAdapter(channelAdapter);
+        mChannel.setOnItemSelectedListener(  // 选择频道的 Spinner 设置Adapter以及点击事件
+                new AdapterView.OnItemSelectedListener() {
+                    boolean mInit = true;
+                    @Override
+                    public void onItemSelected(AdapterView&lt;?&gt; adapterView, View view, int position,long id) {
+                        if (!mInit) {
+                            mBandIndex = position;
+                            mWifiConfig.apBand = mBandIndex;  //  设置mWifiConfig的频率值
+                        } else {
+                            mInit = false;
+                            mChannel.setSelection(mBandIndex);
+                        }
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView&lt;?&gt; adapterView) {
+
+                    }
+                }
+        );
+
+        mSsid.addTextChangedListener(this);  // 设置热点名输入监听事件
+        mPassword.addTextChangedListener(this);   // 设置热点密码输入监听事件
+        ((CheckBox) mView.findViewById(R.id.show_password)).setOnClickListener(this);   // 设置显示密码的 checkbox
+        mSecurity.setOnItemSelectedListener(this);    // 设置 安全选择的 监听事件
+
+        super.onCreate(savedInstanceState);
+
+        showSecurityFields();
+        validate();
+    }
+
+/packages/apps/Settings/src/com/android/settings/wifi/WifiApDialog.java   
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    }
+
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
+/packages/apps/Settings/src/com/android/settings/wifi/WifiApDialog.java
+    public void afterTextChanged(Editable editable) {
+        validate();
+    }  
+
+
+    private void validate() {  //  设置  保存按钮 是否 使能
+        String mSsidString = mSsid.getText().toString();
+        if ((mSsid != null &amp;&amp; mSsid.length() == 0)|| ((mSecurityTypeIndex == WPA2_INDEX) &amp;&amp; mPassword.length() &lt; 8)|| (mSsid != null &amp;&amp; Charset.forName(&quot;UTF-8&quot;).encode(mSsidString).limit() &gt; 32)) {
+            getButton(BUTTON_SUBMIT).setEnabled(false);
+        } else {
+            getButton(BUTTON_SUBMIT).setEnabled(true);
+        }
+    }
+</code></pre><h3 id="ua3-">UA3布局分析</h3>
+<pre><code>
+&lt;string name=&quot;wifi_tether_checkbox_text&quot; &gt;&quot;便携式WLAN热点【移动热点】&quot;&lt;/string&gt;
+&lt;string name=&quot;wifi_tether_configure_ap_text&quot; &gt;&quot;设置WLAN热点&quot;&lt;/string&gt;
+
+/packages/apps/Settings/res/xml/tether_prefs.xml
+&lt;PreferenceScreen xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+                  xmlns:settings=&quot;http://schemas.android.com/apk/res-auto&quot;&gt;
+
+    &lt;SwitchPreference
+        android:key=&quot;usb_tether_settings&quot;
+        android:title=&quot;@string/usb_tethering_button_text&quot; /&gt;
+
+    &lt;SwitchPreference
+        android:key=&quot;enable_wifi_ap&quot;  【【移动热点】】
+        android:title=&quot;@string/wifi_tether_checkbox_text&quot;
+        android:summary=&quot;@string/summary_two_lines_placeholder&quot; /&gt;
+
+    &lt;Preference
+        android:key=&quot;wifi_ap_ssid_and_security&quot;  【设置WLAN热点【移动热点设置】】
+        android:title=&quot;@string/wifi_tether_configure_ap_text&quot;
+        android:persistent=&quot;false&quot; /&gt;
+
+    &lt;SwitchPreference
+        android:key=&quot;enable_bluetooth_tethering&quot;
+        android:title=&quot;@string/bluetooth_tether_checkbox_text&quot; /&gt;
+
+    &lt;Preference
+        android:key=&quot;disabled_on_data_saver&quot;
+        android:summary=&quot;@string/tether_settings_disabled_on_data_saver&quot;
+        android:selectable=&quot;false&quot;
+        settings:allowDividerAbove=&quot;true&quot; /&gt;
+&lt;/PreferenceScreen&gt;
+
+
+
+
+R.layout.wifi_ap_dialog   // 热点设置布局界面
+
+
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+
+&lt;ScrollView xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+         android:layout_width=&quot;300sp&quot;
+         android:layout_height=&quot;wrap_content&quot;
+         android:fadeScrollbars=&quot;false&quot;&gt;
+
+    &lt;LinearLayout
+            android:layout_width=&quot;match_parent&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:descendantFocusability=&quot;beforeDescendants&quot;
+            android:focusableInTouchMode=&quot;true&quot;
+            android:orientation=&quot;vertical&quot;&gt;
+
+        &lt;LinearLayout android:id=&quot;@+id/info&quot;
+                android:layout_width=&quot;match_parent&quot;
+                android:layout_height=&quot;wrap_content&quot;
+                style=&quot;@style/wifi_section&quot; /&gt;
+
+        &lt;LinearLayout android:id=&quot;@+id/type&quot;
+                android:layout_width=&quot;match_parent&quot;
+                android:layout_height=&quot;wrap_content&quot;
+                style=&quot;@style/wifi_section&quot;
+                android:visibility=&quot;gone&quot;&gt;
+
+            &lt;LinearLayout
+                    android:layout_width=&quot;match_parent&quot;
+                    android:layout_height=&quot;wrap_content&quot;
+                    style=&quot;@style/wifi_item&quot;&gt;
+                &lt;TextView
+                        android:layout_width=&quot;match_parent&quot;
+                        android:layout_height=&quot;wrap_content&quot;
+                        style=&quot;@style/wifi_item_label&quot;
+                        android:layout_marginTop=&quot;8dip&quot;
+                        android:text=&quot;@string/wifi_ssid&quot; /&gt;  // &lt;string name=&quot;wifi_ssid&quot; &gt;&quot;网络名称&quot;&lt;/string&gt;
+
+                &lt;EditText android:id=&quot;@+id/ssid&quot;  //  热点名  输入框
+                        android:layout_width=&quot;match_parent&quot;
+                        android:layout_height=&quot;wrap_content&quot;
+                        style=&quot;@style/wifi_item_edit_content&quot;
+                        android:singleLine=&quot;true&quot;
+                        android:hint=&quot;@string/wifi_ssid_hint&quot; //  &lt;string name=&quot;wifi_ssid_hint&quot;&gt;&quot;输入SSID&quot;&lt;/string&gt;   
+                        android:inputType=&quot;textNoSuggestions&quot;
+                        android:maxLength=&quot;32&quot; /&gt;
+            &lt;/LinearLayout&gt;
+
+            &lt;LinearLayout
+                    android:layout_width=&quot;match_parent&quot;
+                    android:layout_height=&quot;wrap_content&quot;
+                    style=&quot;@style/wifi_item&quot;&gt;
+                &lt;TextView
+                        android:layout_width=&quot;match_parent&quot;
+                        android:layout_height=&quot;wrap_content&quot;
+                        style=&quot;@style/wifi_item_label&quot;
+                        android:layout_marginTop=&quot;8dip&quot;
+                        android:text=&quot;@string/wifi_security&quot; /&gt;   &lt;string name=&quot;wifi_security&quot;&gt;&quot;安全性&quot;&lt;/string&gt;
+
+                &lt;Spinner android:id=&quot;@+id/security&quot;
+                        android:layout_width=&quot;match_parent&quot;
+                        android:layout_height=&quot;wrap_content&quot;
+                        style=&quot;@style/wifi_item_content&quot;
+                        android:prompt=&quot;@string/wifi_security&quot;    &lt;string name=&quot;wifi_security&quot;&gt;&quot;安全性&quot;&lt;/string&gt;
+                        android:entries=&quot;@array/wifi_ap_security&quot; /&gt;
+
+&lt;string-array name=&quot;wifi_ap_security&quot;&gt; 加密方式
+&lt;item&gt;@string/wifi_security_none&lt;/item&gt;
+&lt;item&gt;@string/wifi_security_wpa2&lt;/item&gt;
+&lt;/string-array&gt;
+
+            &lt;/LinearLayout&gt;
+
+        &lt;/LinearLayout&gt;
+
+        &lt;LinearLayout android:id=&quot;@+id/fields&quot;
+                android:layout_width=&quot;match_parent&quot;
+                android:layout_height=&quot;wrap_content&quot;
+                style=&quot;@style/wifi_section&quot;
+                android:visibility=&quot;gone&quot;&gt;
+
+            &lt;LinearLayout
+                    android:layout_width=&quot;match_parent&quot;
+                    android:layout_height=&quot;wrap_content&quot;
+                    style=&quot;@style/wifi_item&quot;&gt;
+                &lt;TextView
+                        android:layout_width=&quot;match_parent&quot;
+                        android:layout_height=&quot;wrap_content&quot;
+                        style=&quot;@style/wifi_item_label&quot;
+                        android:layout_marginTop=&quot;8dip&quot;
+                        android:text=&quot;@string/wifi_password&quot; /&gt;  //   &lt;string name=&quot;wifi_password&quot; &gt;&quot;密码&quot;&lt;/string&gt;
+
+                &lt;EditText android:id=&quot;@+id/password&quot;   //  密码输入框
+                        android:layout_width=&quot;match_parent&quot;
+                        android:layout_height=&quot;wrap_content&quot;
+                        style=&quot;@style/wifi_item_edit_content&quot;
+                        android:singleLine=&quot;true&quot;
+                        android:password=&quot;true&quot;
+                        android:maxLength=&quot;63&quot;
+                        android:imeOptions=&quot;flagForceAscii&quot; /&gt;
+            &lt;/LinearLayout&gt;
+
+            &lt;LinearLayout
+                    android:layout_width=&quot;match_parent&quot;
+                    android:layout_height=&quot;wrap_content&quot;
+                    style=&quot;@style/wifi_item&quot;&gt;
+                &lt;TextView android:id=&quot;@+id/hint&quot;
+                        android:layout_width=&quot;match_parent&quot;
+                        android:layout_height=&quot;wrap_content&quot;
+                        style=&quot;@style/wifi_item_label&quot;
+                        android:text=&quot;@string/credentials_password_too_short&quot;  // &lt;string name=&quot;credentials_password_too_short&quot; &gt;&quot;密码至少应包含8个字符。&quot;&lt;/string&gt;
+                        android:layout_marginTop=&quot;8dip&quot;
+                        android:layout_marginBottom=&quot;10sp&quot;/&gt;
+
+                &lt;CheckBox android:id=&quot;@+id/show_password&quot;   // 
+                        android:layout_width=&quot;match_parent&quot;
+                        android:layout_height=&quot;wrap_content&quot;
+                        style=&quot;@style/wifi_item_content&quot;
+                        android:text=&quot;@string/wifi_show_password&quot; /&gt;  // &lt;string name=&quot;wifi_show_password&quot; &gt;&quot;显示密码&quot;&lt;/string&gt;
+            &lt;/LinearLayout&gt;
+        &lt;/LinearLayout&gt;
+
+        &lt;LinearLayout android:id=&quot;@+id/fields&quot;
+                android:layout_width=&quot;match_parent&quot;
+                android:layout_height=&quot;wrap_content&quot;
+                style=&quot;@style/wifi_section&quot; &gt;
+
+            &lt;LinearLayout
+                    android:layout_width=&quot;match_parent&quot;
+                    android:layout_height=&quot;wrap_content&quot;
+                    style=&quot;@style/wifi_item&quot;&gt;
+                &lt;TextView
+                    android:layout_width=&quot;match_parent&quot;
+                    android:layout_height=&quot;wrap_content&quot;
+                    style=&quot;@style/wifi_item_label&quot;
+                    android:layout_marginTop=&quot;8dip&quot;
+                    android:text=&quot;@string/wifi_ap_band_config&quot; /&gt;  //  &lt;string name=&quot;wifi_ap_band_config&quot;&gt;&quot;选择 AP 频段&quot;&lt;/string&gt;
+
+                &lt;Spinner android:id=&quot;@+id/choose_channel&quot;
+                    android:layout_width=&quot;match_parent&quot;
+                    android:layout_height=&quot;wrap_content&quot;
+                    style=&quot;@style/wifi_item_content&quot;
+                    android:prompt=&quot;@string/wifi_ap_band_config&quot; /&gt;     //  &lt;string name=&quot;wifi_ap_band_config&quot;&gt;&quot;选择 AP 频段&quot;&lt;/string&gt;
+            &lt;/LinearLayout&gt;
+        &lt;/LinearLayout&gt;
+
+    &lt;/LinearLayout&gt;
+&lt;/ScrollView&gt;
+</code></pre><h2 id="wifi-ua9-ua3-">WIFI热点 UA9分析 (接UA3 往下)</h2>
+<h3 id="ua9-">UA9 操作列</h3>
+<p><img src="img_hotpot/4.png" width = "25%" height="25%"/></p>
+<ol>
+<li><strong>UA编号</strong>   UA9</li><li><strong>UA说明</strong>  <strong> WIFI移动热点详细设置界面弹框确认按钮</strong>  </li><li><strong>UA触发函数</strong>   WifiApDialog.java  的 onCreate 函数 设置了 点击保存按钮处理事件<br>setButton(BUTTON_SUBMIT, context.getString(R.string.wifi_save),  DialogInterface.OnClickListener  mListener【TetherSettings.java实现该接口】);</li><li><p><strong>UA字符可选值</strong>   【设置WLAN热点【移动热点设置】】</p>
+</li><li><p><strong>UA布局及ID</strong> 在network_and_internet.xml布局文件的Preference指定了Fragment  android:fragment=&quot;com.android.settings.TetherSettings&quot; 当前所在的Fragment TetherSettings<br>当前的UI为<br>Activity: [NetworkDashboardActivity] SettingsActivity.java  实现了 OnPreferenceStartFragmentCallback 接口<br>Fragment:TetherSettings</p>
+</li><li><strong>代码Key</strong>     </li><li><strong>代码可选值  </strong></li><li><strong>数据库Key </strong> </li><li><strong>数据库可选值 </strong> </li><li><strong>SP的Key</strong>  </li><li><strong>SP可选值</strong>  </li><li><strong>UA操作后UI显示类</strong>  </li><li><strong>UA触发函数所在类</strong>  </li></ol>
+<hr>
+<h3 id="ua9-">UA9代码分析</h3>
+<pre><code>/packages/apps/Settings/src/com/android/settings/wifi/WifiApDialog.java
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        boolean mInit = true;
+        mView = getLayoutInflater().inflate(R.layout.wifi_ap_dialog, null);
+
+//   private final DialogInterface.OnClickListener mListener;
+        setButton(BUTTON_SUBMIT, context.getString(R.string.wifi_save), mListener 【TetherSettings.java】);   // 保存   监听器为  mListener
+        setButton(DialogInterface.BUTTON_NEGATIVE,
+        context.getString(R.string.wifi_cancel), mListener 【TetherSettings.java】 );    // 取消  监听器为  mListener
+
+
+}
+
+
+/packages/apps/Settings/src/com/android/settings/TetherSettings.java
+
+public class TetherSettings extends RestrictedSettingsFragment
+        implements DialogInterface.OnClickListener, Preference.OnPreferenceChangeListener, DataSaverBackend.Listener {
+
+
+    public void onClick(DialogInterface dialogInterface, int button) {
+        if (button == DialogInterface.BUTTON_POSITIVE) {  // 点击保存按钮 之后
+            mWifiConfig = mDialog.getConfig();  // 从 WifiApDialog 获得 mWifiConfig
+            if (mWifiConfig != null) {
+                /**
+                 * if soft AP is stopped, bring up
+                 * else restart with new config
+                 * TODO: update config on a running access point when framework support is added
+                 */
+                if (mWifiManager.getWifiApState() == WifiManager.WIFI_AP_STATE_ENABLED) {
+                    Log.d(&quot;TetheringSettings&quot;,Wifi AP config changed while enabled, stop and restart&quot;);
+                    mRestartWifiApAfterConfigChange = true;
+                    mCm.stopTethering(TETHERING_WIFI);
+                }
+                mWifiManager.setWifiApConfiguration(mWifiConfig);  // 设置 热点配置的  mWifiConfig  ▲3. framework分析时 往下分析
+                int index = WifiApDialog.getSecurityTypeIndex(mWifiConfig);
+                mCreateNetwork.setSummary(String.format(getActivity().getString(CONFIG_SUBTEXT),mWifiConfig.SSID, mSecurityType[index]));
+            }
+        }
+    }
+
+
+/packages/apps/Settings/src/com/android/settings/wifi/WifiApDialog.java
+    public WifiConfiguration getConfig() {  // 返回  WIFI热点配置界面 配置的热点 对应的  WifiConfiguration
+
+        WifiConfiguration config = new WifiConfiguration();
+
+        /**
+         * TODO: SSID in WifiConfiguration for soft ap
+         * is being stored as a raw string without quotes.
+         * This is not the case on the client side. We need to
+         * make things consistent and clean it up
+         */
+        config.SSID = mSsid.getText().toString();  // 热点名字
+
+        config.apBand = mBandIndex;  // 热点频率
+
+        switch (mSecurityTypeIndex) {
+            case OPEN_INDEX:
+                config.allowedKeyManagement.set(KeyMgmt.NONE);  // 热点加密方式为 NONE
+                return config;
+
+            case WPA2_INDEX:
+                config.allowedKeyManagement.set(KeyMgmt.WPA2_PSK);   // 热点加密方式为 WPA2_PSK
+                config.allowedAuthAlgorithms.set(AuthAlgorithm.OPEN);  // 加密算法为  OPEN
+                if (mPassword.length() != 0) {
+                    String password = mPassword.getText().toString();
+                    config.preSharedKey = password;                    // 设置热点的密码
+                }
+                return config;
+        }
+        return null;
+    }
+</code></pre>
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->
